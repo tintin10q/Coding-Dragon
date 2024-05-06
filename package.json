@@ -1,0 +1,26 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun --bun nuxt build",
+    "dev": "bun --bun nuxt dev",
+    "generate": "bun --bun nuxt generate",
+    "preview": "bun --bun nuxt preview",
+    "postinstall": "bun --bun server/database.ts && bun --bun nuxt prepare"
+  },
+  "dependencies": {
+    "@types/node": "^18.8.0",
+    "@vueuse/core": "^10.9.0",
+    "nuxt": "^3.11.2",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0",
+    "zod": "^3.23.6"
+  },
+  "resolutions": {
+    "@types/node": "18.8.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.1"
+  }
+}
