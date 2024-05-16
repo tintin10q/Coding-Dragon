@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "slay-dragon"
+version = "0.1.0"
+description = ""
+authors = ["Quinten Cabo <tintin10q@hotmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiohttp = "^3.9.5"
+requests = "^2.31.0"
+websockets = "^12.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
