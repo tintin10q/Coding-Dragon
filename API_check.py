@@ -68,7 +68,7 @@ async def process_warrior(session: aiohttp.ClientSession, warrior: Warrior):
 
     username = warrior["username"]
     increased = False
-    if leet_code_data['easySolved'] > warrior['easy'] or True:
+    if leet_code_data['easySolved'] > warrior['easy']:
         print(f"Easy increased for {username}, {leet_code_data['easySolved']} > {warrior['easy']}")
         broadcast_easy_increase_msg(username, leet_code_data['easySolved'])
         increased = True
