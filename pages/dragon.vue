@@ -234,10 +234,6 @@ function reset() {
   margin-bottom: 5px; /* Add some space between items */
 }
 
-@font-face {
-  font-family: Runescape;
-  src: url(/runescape_bold.ttf);
-}
 
 @keyframes death {
   0% {
@@ -287,11 +283,3 @@ function reset() {
 
 </style>
 
-<style>
-body {
-  background-image: url("/background.png");
-  background-size: cover;
-  color: white;
-  font-family: Runescape, Arial, Helvetica, sans-serif;
-}
-</style>

@@ -1,5 +1,5 @@
 <template>
-    <nuxt-page/>
+  <nuxt-page/>
 </template>
 
 
@@ -92,7 +92,17 @@ button:hover {
   --max-width: 1170px;
   --fixed-width: 620px;
 }
+@font-face {
+  font-family: Runescape;
+  src: url(/runescape_bold.ttf);
+}
 
+body {
+  background-image: url("/background.png");
+  background-size: cover;
+  color: white;
+  font-family: Runescape, Arial, Helvetica, sans-serif;
+}
 
 </style>
 <script setup>
