@@ -3,10 +3,7 @@ import HealthBar from "~/components/HealthBar.vue";
 
 const WS_URL = 'ws://localhost:8001/'
 
-const max_health = ref(1)
-
-// This is only true if the dragon is dead on startup
-const dead_already = ref(false)
+const max_health = ref(50)
 
 const damage_death = ref(new Map())
 if (process.client) {
@@ -15,9 +12,7 @@ if (process.client) {
   // hack to make health bar update
   setTimeout(() => {
     max_health.value -= 1;
-    dead_already.value = 0 > calc_health();
-    console.log("health", calc_health(), dead_already.value)
-    if (websocket && dead_already.value) {
+    if (websocket && calc_health() < 0) {
       websocket.close()
     }
   }, 2)
@@ -25,7 +20,7 @@ if (process.client) {
 
 const easy_damage = 1
 const medium_damage = easy_damage * 3
-const hard_damage = medium_damage * 3
+const hard_damage = medium_damage * 2
 
 function deal_damage(username: string, amount: number) {
   const my_damage = damage_death.value.get(username) ?? 0
@@ -79,10 +74,8 @@ if (process.client) {
   hit_sound_hard = new Audio('/big_damage.ogx')
 
   onMounted(() => {
-    if (!dead_already.value) {
-      websocket = new WebSocket(WS_URL);
-      websocket.addEventListener("message", handle_msg)
-    }
+    websocket = new WebSocket(WS_URL);
+    websocket.addEventListener("message", handle_msg)
   })
 
   onUnmounted(() => {
@@ -134,13 +127,15 @@ function load_damage(): Map<string, number> {
 }
 
 watch(health, (new_health) => {
-  if (0 >= new_health) {
-    if (allowed_audio.value && !died.value) {
-      died.value = true;
+  console.log("New health", new_health)
+  if (0 >= new_health && !died.value) {
+    died.value = true;
+    showMessage("The Dragon has been beaten!")
+    websocket.close();
+    if (allowed_audio.value) {
       const victory_sound = new Audio('/victory.ogx')
+      console.log("audio",victory_sound)
       victory_sound.play()
-      showMessage("The Dragon has been beaten!")
-      websocket.close();
     }
   }
   save_damage(damage_death.value)
@@ -149,7 +144,6 @@ watch(health, (new_health) => {
 function reset() {
   damage_death.value = new Map();
   message.value = ''
-  dead_already.value = false;
   window.location.reload()
 }
 
@@ -171,7 +165,6 @@ function reset() {
 
   <div style="display: flex; margin-inline: 5rem">
     <div
-        v-if="!dead_already"
         style="display: flex; align-content: center; align-items: center; justify-content: center;
         padding-right: 8rem;
         padding-left: 20rem;
@@ -180,7 +173,7 @@ function reset() {
                   name="The Dragon"/>
       <div>
         <img src="/draak.png" :style="{'max-height': '30rem'}"
-             :class="{'death-animation': died, 'dragon-move': !died}">
+             :class="{'death-animation': 0 >= health , 'dragon-move': !died}">
       </div>
     </div>
     <div style="position: relative" v-if="damage_death.size">

@@ -52,20 +52,21 @@ const given_username = ref("")
 </script>
 
 <template>
-  <div v-if="!username" style="display: flex; justify-content: center">
+  <div v-if="!username" style="display: flex; justify-content: center; font-size: x-large">
     <div>
       <h1>Sign up to slay dragon</h1>
       <p>Hoi dit is een signup page 🐉🗡️</p>
       <form>
-        <label style="font-size: large" for="username">Username:</label>
+        <label style="font-size: large" for="username">Leet Code Username:</label>
+        <br>
         <input style="font-size: large" name="username" type="text" v-model="given_username">
         <button type="submit" @click.prevent="signup()">Signup</button>
       </form>
     </div>
   </div>
   <div v-else>
-    <div style="display: flex;justify-content: center">
-    <span style="font-size: larger">
+    <div style="display: flex;justify-content: center; padding-top: 5rem">
+    <span style="font-size: x-large">
     You signed up as <b>{{ username }}</b>
       </span>
     </div>
@@ -74,12 +75,12 @@ const given_username = ref("")
       <button type="button" @click="signout()">Remove my username</button>
     </div>
   </div>
-  <div style="display: flex; justify-content: center">
+  <div style="display: flex; justify-content: center; font-size: x-large; padding-top: 2rem">
     <div v-show="errorMSG.length !== 0"
-         style="color: darkred; padding: 1rem; border: black solid 2px; width: fit-content">
+         style="color: #dc7979; padding: 1rem; border: #a97878 solid 2px; width: fit-content">
       Error: {{ errorMSG }}
     </div>
-    <loader v-show="loading === true"/>
+    <loader v-show="loading === true" style="opacity: .5"/>
   </div>
 </template>
 

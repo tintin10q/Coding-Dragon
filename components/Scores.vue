@@ -46,6 +46,7 @@ table {
 th, td {
   padding: 12px 15px;
   text-align: left;
+  font-size: larger;
 }
 
 th {
@@ -54,7 +55,7 @@ th {
 }
 
 tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: rgba(83, 242, 147, 0.53);
 }
 
 tr:hover {

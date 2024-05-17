@@ -8,8 +8,9 @@ from typing import TypedDict, Literal, Dict
 import websockets
 
 BASE_URL_LEET = 'https://leetcode-stats-api.herokuapp.com/'
-BASE_URL_DRAGON = 'http://localhost:3001/api/warrior'
-INTERVAL = 10  # sec
+BASE_URL_DRAGON = 'http://localhost:3000/api/warrior'
+BASE_URL_DRAGON_PING = 'http://localhost:3000/api/ping'
+INTERVAL = 20  # sec
 
 
 class Warrior(TypedDict):
@@ -64,7 +65,6 @@ async def process_warrior(session: aiohttp.ClientSession, warrior: Warrior):
     if leet_code_data is None:
         print("[WARRIOR] Failed to retrieve leet code for", warrior['username'])
         return
-    print(leet_code_data)
 
     username = warrior["username"]
     increased = False
@@ -92,11 +92,17 @@ async def repeatedly_check_changes(interval):
         while True:
             if CONNECTIONS:
                 warriors = fetch_local_warriors()
-                tasks = [process_warrior(session, warrior) for warrior in warriors]
-                r = await asyncio.gather(*tasks, return_exceptions=True)
+                print("Got ", len(warriors), "warrior", warriors)
+                if warriors:
+                    tasks = [process_warrior(session, warrior) for warrior in warriors if "username" in warrior]
+                    r = await asyncio.gather(*tasks, return_exceptions=True)
+                else:
+                    print("Skipping checks, no warriors")
             else:
                 print("Skipping checks, no connections")
+            print("Waiting", interval, "seconds", end=", ", flush=True)
             await asyncio.sleep(interval)
+            print("Waited", interval, "seconds")
 
 
 async def ws_connect_handler(websocket):
@@ -137,4 +143,9 @@ async def main():
 
 
 if __name__ == '__main__':
+    if not requests.get(BASE_URL_DRAGON_PING).ok:
+        print(f"Could not reach {BASE_URL_DRAGON_PING} :()")
+        exit(1)
+    else:
+        print("Connected to the dragon!")
     asyncio.run(main())
