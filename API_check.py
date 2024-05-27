@@ -84,14 +84,20 @@ async def process_warrior(session: aiohttp.ClientSession, warrior: Warrior):
         broadcast_damage_msg(username, damage)
     db = None
     if leet_code_data['easySolved'] > warrior['easy']:
+        print("Updating easy for",username)
         db = sqlite3.connect("_dragon.sqlite") if db is None else db
         db.execute("update warrior set easy = ? where username = ? ", (leet_code_data['mediumSolved'], username))
+        db.commit()
     if leet_code_data['mediumSolved'] > warrior['start_medium']:
+        print("Updating medium for",username)
         db = sqlite3.connect("_dragon.sqlite") if db is None else db
         db.execute("update warrior set medium = ? where username = ? ", (leet_code_data['mediumSolved'], username))
+        db.commit()
     if leet_code_data['hardSolved'] > warrior['start_hard']:
+        print("Updating hard for",username)
         db = sqlite3.connect("_dragon.sqlite") if db is None else db
         db.execute("update warrior set hard = ? where username = ? ", (leet_code_data['hardSolved'], username))
+        db.commit()
 
 
 CONNECTIONS = set()
