@@ -7,6 +7,8 @@ from typing import TypedDict, Literal, Dict
 
 import websockets
 
+import sqlite3
+
 BASE_URL_LEET = 'https://leetcode-stats-api.herokuapp.com/'
 BASE_URL_DRAGON = 'http://localhost:3000/api/warrior'
 BASE_URL_DRAGON_PING = 'http://localhost:3000/api/ping'
@@ -18,6 +20,9 @@ class Warrior(TypedDict):
     easy: int
     medium: int
     hard: int
+    start_easy: int
+    start_medium: int
+    start_hard: int
 
 
 class LeetCodeResponse(TypedDict):
@@ -67,21 +72,26 @@ async def process_warrior(session: aiohttp.ClientSession, warrior: Warrior):
         return
 
     username = warrior["username"]
-    increased = False
+    damage = 0
+
+    if leet_code_data['easySolved'] > warrior['start_easy']:
+        damage += leet_code_data['easySolved'] - warrior['start_easy']
+    if leet_code_data['mediumSolved'] > warrior['start_medium']:
+        damage += leet_code_data['mediumSolved'] - warrior['start_medium']
+    if leet_code_data['hardSolved'] > warrior['start_hard']:
+        damage += leet_code_data['hardSolved'] - warrior['start_hard']
+    if damage > 0:
+        broadcast_damage_msg(username, damage)
+    db = None
     if leet_code_data['easySolved'] > warrior['easy']:
-        print(f"Easy increased for {username}, {leet_code_data['easySolved']} > {warrior['easy']}")
-        broadcast_easy_increase_msg(username, leet_code_data['easySolved'])
-        increased = True
-    if leet_code_data['mediumSolved'] > warrior['medium']:
-        broadcast_medium_increase_msg(username, leet_code_data['mediumSolved'])
-        print(f"Medium increased for {username} {leet_code_data['mediumSolved']} > {warrior['medium']}")
-        increased = True
-    if leet_code_data['hardSolved'] > warrior['hard']:
-        broadcast_hard_increase_msg(username, leet_code_data['totalHard'])
-        increased = True
-        print(f"Hard increased for {username}, {leet_code_data['hardSolved']} > {warrior['hard']}")
-    if not increased:
-        print(f" Not increased for {username}")
+        db = sqlite3.connect("_dragon.sqlite") if db is None else db
+        db.execute("update warrior set easy = ? where username = ? ", (leet_code_data['mediumSolved'], username))
+    if leet_code_data['mediumSolved'] > warrior['start_medium']:
+        db = sqlite3.connect("_dragon.sqlite") if db is None else db
+        db.execute("update warrior set medium = ? where username = ? ", (leet_code_data['mediumSolved'], username))
+    if leet_code_data['hardSolved'] > warrior['start_hard']:
+        db = sqlite3.connect("_dragon.sqlite") if db is None else db
+        db.execute("update warrior set hard = ? where username = ? ", (leet_code_data['hardSolved'], username))
 
 
 CONNECTIONS = set()
@@ -115,23 +125,10 @@ async def ws_connect_handler(websocket):
         CONNECTIONS.remove(websocket)
 
 
-def broadcast_easy_increase_msg(username: str, new_easy: int) -> None:
-    msg = {"type": "easy_increase", "data": {"username": username, "new_easy": new_easy}}
+def broadcast_damage_msg(username: str, amount: int) -> None:
+    msg = {"type": "damage", "data": {"username": username, "damage": amount}}
     msg = json.dumps(msg)
     message_all(msg)
-
-
-def broadcast_medium_increase_msg(username: str, new_medium: int) -> None:
-    msg = {"type": "medium_increase", "data": {"username": username, "new_medium": new_medium}}
-    msg = json.dumps(msg)
-    message_all(msg)
-
-
-def broadcast_hard_increase_msg(username: str, new_hard: int) -> None:
-    msg = {"type": "hard_increase", "data": {"username": username, "new_hard": new_hard}}
-    msg = json.dumps(msg)
-    message_all(msg)
-
 
 def message_all(message: bytes | str):
     websockets.broadcast(CONNECTIONS, message)

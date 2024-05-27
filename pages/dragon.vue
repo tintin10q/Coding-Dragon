@@ -89,24 +89,13 @@ if (process.client) {
     const event = JSON.parse(data);
     console.log("event", event)
     if (died.value) return;
-    let username;
+    let username, damage;
     switch (event.type) {
-      case "easy_increase":
-        // Update the UI with the move.
+      case "damage":
         username = event.data.username;
-        showMessage(`${username} deals ${easy_damage} damage!`);
-        deal_damage(username, easy_damage)
-        break;
-      case "medium_increase":
-        username = event.data.username;
-        showMessage(`${username} deals ${medium_damage} damage!`);
-        // No further messages are expected; close the WebSocket connection.
-        deal_damage(username, medium_damage)
-        break;
-      case "hard_increase":
-        username = event.data.username;
-        showMessage(`${username} deals ${hard_damage} damage!`);
-        deal_damage(username, hard_damage)
+        damage = event.data.damage;
+        showMessage(`${username} deals ${damage} damage!`);
+        deal_damage(username, damage)
         break;
       default:
         throw new Error(`Unsupported event type: ${event.type}.`);

@@ -2,7 +2,6 @@
 import {Database} from "bun:sqlite"
 //
 import z from "zod"
-import {profile} from "bun:jsc";
 
 const leeturl = 'https://leetcode-stats-api.herokuapp.com/'
 
@@ -36,8 +35,8 @@ export default defineEventHandler(async (event) => {
     }
     const profile = profileResult.data;
 
-    const signup = db.prepare("insert into warrior (username, easy, medium, hard) values (?, ?, ?, ?)")
-    signup.run(username, profile.easySolved, profile.mediumSolved, profile.hardSolved);
+    const signup = db.prepare("insert into warrior (username, easy, medium, hard,start_easy, start_medium, start_hard ) values (?, ?, ?, ?, ?,?,?)")
+    signup.run(username, profile.easySolved, profile.mediumSolved, profile.hardSolved, profile.easySolved, profile.mediumSolved, profile.hardSolved);
     db.close();
     return {username, easy: profile?.easySolved, medium: profile.mediumSolved, hard: profile.hardSolved};
 })
