@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import HealthBar from "~/components/HealthBar.vue";
 
-const WS_URL = 'ws://localhost:8001/'
+const WS_URL = 'ws://gost.ws/ws/'
 
 const max_health = ref(5000)
 
