@@ -3,7 +3,7 @@ import HealthBar from "~/components/HealthBar.vue";
 
 const WS_URL = 'ws://localhost:8001/'
 
-const max_health = ref(50)
+const max_health = ref(5000)
 
 const damage_death = ref(new Map())
 if (process.client) {
