@@ -141,7 +141,7 @@ def message_all(message: bytes | str):
 
 
 async def main():
-    async with websockets.serve(ws_connect_handler, "", 8001):
+    async with websockets.serve(ws_connect_handler, "", 9000):
         await repeatedly_check_changes(INTERVAL)
 
 
