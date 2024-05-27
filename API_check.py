@@ -77,9 +77,9 @@ async def process_warrior(session: aiohttp.ClientSession, warrior: Warrior):
     if leet_code_data['easySolved'] > warrior['start_easy']:
         damage += leet_code_data['easySolved'] - warrior['start_easy']
     if leet_code_data['mediumSolved'] > warrior['start_medium']:
-        damage += leet_code_data['mediumSolved'] - warrior['start_medium']
+        damage += (leet_code_data['mediumSolved'] - warrior['start_medium']) * 3
     if leet_code_data['hardSolved'] > warrior['start_hard']:
-        damage += leet_code_data['hardSolved'] - warrior['start_hard']
+        damage += (leet_code_data['hardSolved'] - warrior['start_hard']) * 10
     if damage > 0:
         broadcast_damage_msg(username, damage)
     db = None
