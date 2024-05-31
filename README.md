@@ -8,7 +8,7 @@ Make sure that the urls match in the python file and the src/pages/dragon.vue fi
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-[Argitecture](arg.svg)
+![Argitecture](arg.svg)
 
 ## Setup
 
