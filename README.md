@@ -1,6 +1,14 @@
-# Nuxt 3 Minimal Starter
+# Runescape Dragon
+
+This project is a webapp where you can have a leader board with a Runescape theme.
+The leaderboard is based on how many challenges you solve on leet code after signing up. 
+You deal passive damage to the dragon for each challenge you solve.
+
+Make sure that the urls match in the python file and the src/pages/dragon.vue file.
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+
+[Argitecture](arg.svg)
 
 ## Setup
 
